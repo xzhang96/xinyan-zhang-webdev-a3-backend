@@ -29,6 +29,20 @@ router.get('/:brand', (req, res) => {
         })
 })
 
+router.get('/:brand/edit', (req, res) => {
+    let brand = req.params.brand;
+    checkBrandExists(brand)
+        .then(response => {
+            if (response) {
+                return res.status(200);
+            } else {
+                return res.status(404);
+            }
+        }, error => {
+            return res.status(500);
+        })
+})
+
 router.post('/', (req, res) => {
     const urlData = req.body;
     if (!urlData.branded) {
