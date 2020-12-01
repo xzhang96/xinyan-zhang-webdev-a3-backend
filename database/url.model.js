@@ -7,10 +7,6 @@ function insertUrl(url) {
     return UrlModel.create(url)
 }
 
-function getAllUrl() {
-    return UrlModel.find().exec();
-}
-
 function getUrl(shortenedUrl) {
     url = UrlModel.findOne(
         { shortenedUrl: shortenedUrl }
@@ -19,14 +15,6 @@ function getUrl(shortenedUrl) {
 }
 
 function checkBrandExists(brand) {
-    // UrlModel.exists({shortenedUrl: brand}, (error, result) => {
-    //     if (error) {
-    //         console.log(error);
-    //         return true;
-    //     } else {
-    //         return result;
-    //     }
-    // })
     return UrlModel.exists(
         {shortenedUrl: brand}
     );
@@ -52,7 +40,6 @@ function deleteUrl(url) {
 
 module.exports = {
     insertUrl: insertUrl,
-    getAllUrl: getAllUrl,
     getUrl: getUrl,
     checkBrandExists: checkBrandExists,
     editUrl: editUrl,
