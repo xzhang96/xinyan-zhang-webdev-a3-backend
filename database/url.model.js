@@ -19,14 +19,17 @@ function getUrl(shortenedUrl) {
 }
 
 function checkBrandExists(brand) {
-    UrlModel.exists({shortenedUrl: brand}, (error, result) => {
-        if (error) {
-            console.log(error);
-            return true;
-        } else {
-            return result;
-        }
-    })
+    // UrlModel.exists({shortenedUrl: brand}, (error, result) => {
+    //     if (error) {
+    //         console.log(error);
+    //         return true;
+    //     } else {
+    //         return result;
+    //     }
+    // })
+    return UrlModel.exists(
+        {shortenedUrl: brand}
+    );
 }
 
 function editUrl(shortenedUrl, newUrl) {

@@ -34,12 +34,12 @@ router.get('/:brand/edit', (req, res) => {
     checkBrandExists(brand)
         .then(response => {
             if (response) {
-                return res.status(200);
+                return res.status(200).send('success');
             } else {
-                return res.status(404);
+                return res.status(404).send('Page Not Found!');
             }
         }, error => {
-            return res.status(500);
+            return res.status(error.response.status).send(error.response.statusText);
         })
 })
 
@@ -49,22 +49,36 @@ router.post('/', (req, res) => {
         let id = utils.generateId(10);
         shortenedUrl = req.protocol + '://' + req.get('host') + req.originalUrl + id;
         urlData.shortenedUrl = id;
+        insertUrl(urlData)
+            .then((response) => {
+                return res.status(200).send(response.shortenedUrl);
+            }, (error) => {
+                return res.status(500).send(error);
+            })
+            .then(() => {
+                console.log("success!");
+            })
     } else {
-        if (checkBrandExists(urlData.shortenedUrl)) {
-            return res.status(502).send("The custom url already exists!");
-        }
-        shortenedUrl = req.protocol + '://' + req.get('host') + req.originalUrl + urlData.shortenedUrl;
+        checkBrandExists(urlData.shortenedUrl)
+            .then(response => {
+                console.log(response);
+                if (response === true) {
+                    return res.status(502).send("The custom url already exists!");
+                } else {
+                    insertUrl(urlData)
+                        .then((response) => {
+                            return res.status(200).send(response.shortenedUrl);
+                        }, (error) => {
+                            return res.status(500).send(error);
+                        })
+                        .then(() => {
+                            console.log("success!");
+                        })
+                }
+            }, error => {
+                return res.status(500);
+            })
     }
-
-    insertUrl(urlData)
-        .then((response) => {
-            return res.status(200).send(response.shortenedUrl);
-        }, (error) => {
-            return res.status(500).send(error);
-        })
-        .then(() => {
-            console.log("success!");
-        })
 })
 
 router.put('/:brand/edit/', (req, res) => {
